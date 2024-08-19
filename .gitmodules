@@ -1,3 +1,6 @@
 [submodule "sigloi-contracts/lib/forge-std"]
 	path = sigloi-contracts/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "sigloi-contracts/lib/openzeppelin-contracts"]
+	path = sigloi-contracts/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
