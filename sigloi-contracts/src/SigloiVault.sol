@@ -1,0 +1,61 @@
+// src/Sigloi.sol
+pragma solidity ^0.8.0;
+
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+
+interface ILido {
+    function submit(address _referral) external payable returns (uint256);
+}
+
+contract Sigloi is Initializable, OwnableUpgradeable {
+    ILido public lido;
+    IERC20Upgradeable public stablecoin;
+    mapping(address => uint256) public collateral;
+    mapping(address => uint256) public stETHCollateral;
+
+    event Deposited(address indexed user, uint256 amount);
+    event Minted(address indexed user, uint256 amount);
+    event Staked(address indexed user, uint256 stETHAmount);
+
+    function initialize(
+        address _lidoAddress,
+        address _stablecoinAddress
+    ) public initializer {
+        __Ownable_init();
+        lido = ILido(_lidoAddress); // Lido contract address
+        stablecoin = IERC20Upgradeable(_stablecoinAddress); // SIGUSD contract address
+    }
+
+    function depositAndStake() external payable {
+        require(msg.value > 0, "No ETH sent");
+
+        // stake eth with lido
+        uint256 stETHReceived = lido.submit{value: msg.value}(address(0)); // stake and receive stETH
+
+        // update user collateral
+        stETHCollateral[msg.sender] += stETHReceived;
+
+        emit Deposited(msg.sender, msg.value);
+        emit Staked(msg.sender, stETHReceived);
+    }
+
+    function mint(uint256 amount) external {
+        uint256 collateralValue = getCollateralValue(msg.sender);
+        require(
+            collateralValue * 100 >= amount * 150,
+            "Insufficient collateral"
+        ); // Ensure 150% collateral
+
+        // mint SIGUSD to the user
+        stablecoin.transfer(msg.sender, amount);
+
+        emit Minted(msg.sender, amount);
+    }
+
+    function getCollateralValue(address user) public view returns (uint256) {
+        return stETHCollateral[user]; // Placeholder for actual stETH valuation using oracles
+    }
+}
