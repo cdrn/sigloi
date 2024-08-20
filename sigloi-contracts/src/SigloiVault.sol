@@ -1,18 +1,17 @@
 // src/Sigloi.sol
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 
 interface ILido {
     function submit(address _referral) external payable returns (uint256);
 }
 
-contract Sigloi is Initializable, OwnableUpgradeable {
+contract SigloiVault is Initializable, OwnableUpgradeable {
     ILido public lido;
-    IERC20Upgradeable public stablecoin;
+    IERC20 public stablecoin;
     mapping(address => uint256) public collateral;
     mapping(address => uint256) public stETHCollateral;
 
@@ -24,9 +23,9 @@ contract Sigloi is Initializable, OwnableUpgradeable {
         address _lidoAddress,
         address _stablecoinAddress
     ) public initializer {
-        __Ownable_init();
+        __Ownable_init(msg.sender);
         lido = ILido(_lidoAddress); // Lido contract address
-        stablecoin = IERC20Upgradeable(_stablecoinAddress); // SIGUSD contract address
+        stablecoin = IERC20(_stablecoinAddress); // SIGUSD contract address
     }
 
     function depositAndStake() external payable {

@@ -2,23 +2,40 @@
 pragma solidity ^0.8.0;
 
 import "forge-std/Test.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol"; // Use regular IERC20 for testing
 import "../src/SigloiVault.sol";
 
+contract MockLido is ILido {
+    function submit(
+        address _referral
+    ) external payable override returns (uint256) {
+        // Mock Lido's submit function: return stETH equal to the amount of ETH sent
+        return msg.value;
+    }
+}
+
+contract MockStablecoin is ERC20 {
+    constructor() ERC20("Mock SIGUSD", "MSIGUSD") {}
+
+    function mint(address to, uint256 amount) external {
+        _mint(to, amount);
+    }
+}
+
 contract SigloiVaultTest is Test {
-    Sigloi sigloi;
-    IERC20Upgradeable stablecoin;
-    ILido lido;
+    SigloiVault sigloi;
+    MockStablecoin stablecoin;
+    MockLido lido;
 
     address user = address(1);
 
     function setUp() public {
         // Deploy mocks for Lido and Stablecoin
-        lido = ILido(address(new MockLido()));
-        stablecoin = IERC20Upgradeable(address(new MockStablecoin()));
+        lido = new MockLido();
+        stablecoin = new MockStablecoin();
 
         // Initialize Sigloi contract with mock Lido and Stablecoin
-        sigloi = new Sigloi();
+        sigloi = new SigloiVault();
         sigloi.initialize(address(lido), address(stablecoin));
 
         // Label user address for clarity in tests
