@@ -15,7 +15,9 @@ contract MockLido is ILido {
 }
 
 contract MockStablecoin is ERC20 {
-    constructor() ERC20("Mock SIGUSD", "MSIGUSD") {}
+    constructor() ERC20("Mock SIGUSD", "MSIGUSD") {
+        _mint(address(this), 100000 ether); // Pre-mint 100 SIGUSD to the contract
+    }
 
     function mint(address to, uint256 amount) external {
         _mint(to, amount);
@@ -72,6 +74,8 @@ contract SigloiVaultTest is Test {
     }
 
     function testMintSuccess() public {
+        stablecoin.mint(address(sigloi), 10 ether); // Pre-mint 10 SIGUSD to SigloiVault
+
         // Simulate user depositing and staking ETH
         vm.deal(user, 10 ether);
         vm.prank(user);
@@ -81,7 +85,7 @@ contract SigloiVaultTest is Test {
         vm.prank(user);
         sigloi.mint(4 ether); // 150% collateral should allow minting 4 SIGUSD from 10 ETH
 
-        // Check that SIGUSD was minted
+        // Check that SIGUSD was transferred to the user's account
         assertEq(stablecoin.balanceOf(user), 4 ether, "Minting failed");
     }
 
