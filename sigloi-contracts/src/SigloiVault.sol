@@ -5,6 +5,8 @@ import "@openzeppelin-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 
+import "./SIGUSD.sol";
+
 interface ILido {
     function submit(address _referral) external payable returns (uint256);
 }
@@ -25,7 +27,7 @@ contract SigloiVault is Initializable, OwnableUpgradeable {
     ) public initializer {
         __Ownable_init(msg.sender);
         lido = ILido(_lidoAddress); // Lido contract address
-        stablecoin = IERC20(_stablecoinAddress); // SIGUSD contract address
+        stablecoin = SIGUSD(_stablecoinAddress); // SIGUSD contract address
     }
 
     function depositAndStake() external payable {
