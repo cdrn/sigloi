@@ -43,6 +43,22 @@
   pointer-events: none;
 }
 
+.hero-bg, .navbar-bg {
+  background-image: url('/background.webp'); /* Adjust the path based on your file structure */
+  background-size: cover; /* Ensure the image covers the entire section */
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.navbar-bg {
+  background-size: contain; /* Or cover depending on how it fits */
+}
+
+.hero-bg {
+  height: 100vh; /* Full height for the hero section */
+}
+
+
 @keyframes crt-flicker {
   0%, 100% {
     opacity: 0.9;
