@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import "@fontsource/orbitron"; // defaults to 400 weight
 import "@fontsource/orbitron/500.css"; // optional for specific weight
