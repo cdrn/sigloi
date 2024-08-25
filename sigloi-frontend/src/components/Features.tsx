@@ -22,8 +22,8 @@ const Features = () => {
             Minting SIGUSD
           </h3>
           <p>
-            Use your staked ETH to mint SIGUSD, an over-collateralized
-            stablecoin designed for stability.
+            Use your staked ETH to mint SIGUSD, a USD pegged stablecoin backed
+            by LSTs
           </p>
         </div>
         <div className="bg-gray-700 p-6 rounded-lg">
