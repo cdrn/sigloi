@@ -28,6 +28,7 @@ contract SigloiVault is Initializable, OwnableUpgradeable {
         __Ownable_init(msg.sender);
         lido = ILido(_lidoAddress); // Lido contract address
         stablecoin = SIGUSD(_stablecoinAddress); // SIGUSD contract address
+        oracleManager = OracleManager(_oracleManagerAddress);
     }
 
     function depositAndStake() external payable {
@@ -56,7 +57,16 @@ contract SigloiVault is Initializable, OwnableUpgradeable {
         emit Minted(msg.sender, amount);
     }
 
-    function getCollateralValue(address user) public view returns (uint256) {
-        return stETHCollateral[user]; // Placeholder for actual stETH valuation using oracles
+    function getCollateralValue(
+        address user,
+        bytes32 priceFeedId
+    ) public view returns (uint256) {
+        (int64 price, ) = oracleManager.getLatestPrice(priceFeedId);
+
+        // Example calculation based on fetched price
+        uint256 stETHCollateral = stETHCollateral[user];
+        require(price > 0, "Invalid oracle price");
+
+        return (stETHCollateral * uint256(price)) / 1e18; // Adjust for decimals
     }
 }
