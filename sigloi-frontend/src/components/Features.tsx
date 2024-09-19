@@ -1,8 +1,8 @@
 const Features = () => {
   return (
-    <section className="bg-gray-800 text-white py-16">
+    <section className="py-16">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto px-6">
-        <div className="bg-gray-700 p-6 rounded-lg">
+        <div className="p-6 rounded-lg">
           <h3
             className="text-2xl font-bold mb-2"
             style={{ fontFamily: "Orbitron, sans-serif" }}
@@ -14,7 +14,7 @@ const Features = () => {
             collateralizing your assets.
           </p>
         </div>
-        <div className="bg-gray-700 p-6 rounded-lg">
+        <div className="p-6 rounded-lg">
           <h3
             className="text-2xl font-bold mb-2"
             style={{ fontFamily: "Orbitron, sans-serif" }}
@@ -26,7 +26,7 @@ const Features = () => {
             by LSTs
           </p>
         </div>
-        <div className="bg-gray-700 p-6 rounded-lg">
+        <div className="p-6 rounded-lg">
           <h3
             className="text-2xl font-bold mb-2"
             style={{ fontFamily: "Orbitron, sans-serif" }}

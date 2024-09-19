@@ -1,6 +1,6 @@
 const Navbar = () => {
   return (
-    <header className="flex justify-between items-center p-6 bg-gray-900 text-white">
+    <header className="flex justify-between items-center p-6">
       <div
         className="text-3xl font-bold relative crt-text"
         style={{ fontFamily: "Orbitron, sans-serif" }}
