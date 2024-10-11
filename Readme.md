@@ -1,10 +1,11 @@
 # Sigloi 
+## HEAVY WORK IN PROGRESS
 
-**Sigloi** is a decentralized protocol that allows users to mint **SIGUSD**, a dollar-pegged stablecoin, by depositing **liquid staking tokens** (LSTs) as collateral. the unique aspect of the protocol is that the collateral itself generates yield while locked in the system, ensuring that users can continue earning passive income on their staked assets.
+**Sigloi** is a decentralized protocol that allows users to mint **SIGUSD**, a dollar-pegged stablecoin, by depositing **liquid staking tokens** (LSTs) as collateral. This differs from other, similar stables by virtue of the yield being tied to relatively stable (ha ha) LSPs.
 
 ## key features
 - **overcollateralization**: users deposit liquid staking tokens (e.g., steth, rpl) to mint SIGUSD, with a safe overcollateralization ratio (e.g., 150%).
-- **collateral yield**: the liquid staking tokens used as collateral generate yield while locked in the protocol, benefiting users even as they mint stablecoins.
+- **collateral yield**: the liquid staking tokens used as collateral generate yield while locked in the protocol from on chain staking rewards. Clean burning yields.
 - **staking sigusd**: users can stake their SIGUSD in protocol pools to earn additional rewards.
 - **liquidation protection**: the protocol automatically monitors collateral-to-debt ratios and triggers liquidation if collateral values fall below safe thresholds.
 - **oracle integration**: the protocol uses oracles to ensure accurate pricing of the collateral and to manage risk.
