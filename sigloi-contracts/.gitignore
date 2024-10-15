@@ -12,3 +12,6 @@ docs/
 
 # Dotenv file
 .env
+
+# node modules (insanely this is how you install pyth contracts)
+**/node_modules
