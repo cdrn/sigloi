@@ -1,8 +1,8 @@
 // contracts/OracleManager.sol
 pragma solidity ^0.8.0;
 
-import "@openzeppelin-contracts-upgradeable/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin-contracts-upgradeable/contracts/access/OwnableUpgradeable.sol";
+import "@openzeppelin-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 import "@pythnetwork/pyth-sdk-solidity/IPyth.sol"; // Import Pyth interface
 
 contract OracleManager is Initializable, OwnableUpgradeable {
@@ -13,7 +13,7 @@ contract OracleManager is Initializable, OwnableUpgradeable {
 
     // Initialize the OracleManager with the Pyth address
     function initialize(address _pythAddress) public initializer {
-        __Ownable_init();
+        __Ownable_init(msg.sender);
         pyth = IPyth(_pythAddress);
     }
 
@@ -27,9 +27,12 @@ contract OracleManager is Initializable, OwnableUpgradeable {
     function getLatestPrice(
         bytes32 priceFeedId
     ) public view returns (int64 price, uint64 confidence) {
-        PythStructs.Price memory pythPrice = pyth.getPrice(priceFeedId);
+        PythStructs.Price memory pythPrice = pyth.getPriceNoOlderThan(
+            priceFeedId,
+            60
+        );
         return (pythPrice.price, pythPrice.conf);
     }
 
-    // Future-proof: You could implement similar functions for other oracle providers here
+    // Future-proof: add other oracles
 }

@@ -6,6 +6,7 @@ import "@openzeppelin-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin-upgradeable/access/OwnableUpgradeable.sol";
 
 import "./SIGUSD.sol";
+import "./OracleManager.sol";
 
 interface ILido {
     function submit(address _referral) external payable returns (uint256);
@@ -14,6 +15,8 @@ interface ILido {
 contract SigloiVault is Initializable, OwnableUpgradeable {
     ILido public lido;
     IERC20 public stablecoin;
+    OracleManager public oracleManager;
+
     mapping(address => uint256) public collateral;
     mapping(address => uint256) public stETHCollateral;
 
@@ -23,7 +26,8 @@ contract SigloiVault is Initializable, OwnableUpgradeable {
 
     function initialize(
         address _lidoAddress,
-        address _stablecoinAddress
+        address _stablecoinAddress,
+        address _oracleManagerAddress
     ) public initializer {
         __Ownable_init(msg.sender);
         lido = ILido(_lidoAddress); // Lido contract address
@@ -57,16 +61,18 @@ contract SigloiVault is Initializable, OwnableUpgradeable {
         emit Minted(msg.sender, amount);
     }
 
-    function getCollateralValue(
-        address user,
-        bytes32 priceFeedId
-    ) public view returns (uint256) {
-        (int64 price, ) = oracleManager.getLatestPrice(priceFeedId);
+    function getCollateralValue(address user) public view returns (uint256) {
+        // TODO: un-hard code this at some point
+        // Current ID is for steth/usd
+        bytes32 priceFeedId = 0x846ae1bdb6300b817cee5fdee2a6da192775030db5615b94a465f53bd40850b5;
+        (int64 price, uint64 confidence) = oracleManager.getLatestPrice(
+            priceFeedId
+        );
 
-        // Example calculation based on fetched price
         uint256 stETHCollateral = stETHCollateral[user];
         require(price > 0, "Invalid oracle price");
 
-        return (stETHCollateral * uint256(price)) / 1e18; // Adjust for decimals
+        require(price >= 0, "Negative price not allowed");
+        return (stETHCollateral * uint256(int256(price))) / 1e18; // Adjust for decimals
     }
 }

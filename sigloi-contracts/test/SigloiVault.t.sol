@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "forge-std/Test.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol"; // Use regular IERC20 for testing
 import "../src/SigloiVault.sol";
+import "../src/OracleManager.sol";
 
 contract MockLido is ILido {
     function submit(
@@ -24,10 +25,27 @@ contract MockStablecoin is ERC20 {
     }
 }
 
+contract MockOracleManager is OracleManager {
+    int64 private mockPrice;
+    uint64 private mockConfidence;
+
+    function setMockPrice(int64 _price, uint64 _confidence) external {
+        mockPrice = _price;
+        mockConfidence = _confidence;
+    }
+
+    function getLatestPrice(
+        bytes32 /* priceFeedId */
+    ) public view override returns (int64 price, uint64 confidence) {
+        return (mockPrice, mockConfidence);
+    }
+}
+
 contract SigloiVaultTest is Test {
     SigloiVault sigloi;
     MockStablecoin stablecoin;
     MockLido lido;
+    MockOracleManager oracleManager;
 
     address user = address(1);
 
@@ -38,7 +56,11 @@ contract SigloiVaultTest is Test {
 
         // Initialize Sigloi contract with mock Lido and Stablecoin
         sigloi = new SigloiVault();
-        sigloi.initialize(address(lido), address(stablecoin));
+        sigloi.initialize(
+            address(lido),
+            address(stablecoin),
+            address(oracleManager)
+        );
 
         // Label user address for clarity in tests
         vm.label(user, "User");
