@@ -61,7 +61,7 @@ contract SigloiVault is Initializable, OwnableUpgradeable {
         emit Minted(msg.sender, amount);
     }
 
-    function getCollateralValue(address user) public view returns (uint256) {
+    function getCollateralValue(address user) public returns (uint256) {
         // TODO: un-hard code this at some point
         // Current ID is for steth/usd
         bytes32 priceFeedId = 0x846ae1bdb6300b817cee5fdee2a6da192775030db5615b94a465f53bd40850b5;

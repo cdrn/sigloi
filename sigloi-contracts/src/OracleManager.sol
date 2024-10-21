@@ -26,7 +26,7 @@ contract OracleManager is Initializable, OwnableUpgradeable {
     // Function to fetch the latest price from Pyth
     function getLatestPrice(
         bytes32 priceFeedId
-    ) public view returns (int64 price, uint64 confidence) {
+    ) public virtual returns (int64 price, uint64 confidence) {
         PythStructs.Price memory pythPrice = pyth.getPriceNoOlderThan(
             priceFeedId,
             60

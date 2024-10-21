@@ -87,9 +87,9 @@ contract SigloiVaultTest is Test {
         sigloi.depositAndStake{value: 5 ether}();
 
         // Check stETH collateral is updated correctly
-        uint256 stETHCollateral = sigloi.getCollateralValue(user);
+        uint256 userStETHCollateral = sigloi.getCollateralValue(user);
         assertEq(
-            stETHCollateral,
+            userStETHCollateral,
             5 ether,
             "stETH collateral not updated correctly"
         );
